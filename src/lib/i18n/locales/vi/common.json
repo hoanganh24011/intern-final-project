@@ -1,4 +1,6 @@
 {
+	"keyword": "Từ khóa",
+	"sync_data": "Đồng bộ dữ liệu",
 	"title": {
 		"dashboard": "Trang chủ",
 		"unit_user": "Đơn vị và người dùng",
@@ -117,10 +119,10 @@
 		"account_info": "Thông tin tài khoản",
 		"logout": "Đăng xuất"
 	},
-
-	"keyword": "Từ khóa",
 	"error_message": {
-		"selected_at_least": "hãy chọn ít nhất một {data}",
-		"required": "Thông tin {data} này không được bỏ trống "
+		"required": "Thông tin này không được bỏ trống",
+		"min_length": "Thông tin này phải có ít nhất {data} ký tự",
+		"max_length": "Thông tin này không được vượt quá {data} ký tự",
+		"invalid_value": "Thông tin này không hợp lệ"
 	}
 }

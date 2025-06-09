@@ -74,7 +74,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-textarea,
 .form-multiselect,
 .form-select {
-	@apply text-sm text-gray-800 dark:text-gray-100 leading-5 py-2 px-3 border-gray-200 hover:border-gray-300 focus:border-gray-300 dark:border-gray-700/60 dark:hover:border-gray-600 dark:focus:border-gray-600 shadow-sm rounded-lg;
+	@apply text-sm text-gray-800 dark:text-gray-100 leading-5 py-2 px-3 border-gray-200 hover:border-gray-300 focus:border-gray-300 dark:border-surface-400/30 dark:hover:border-gray-600 dark:focus:border-gray-600 shadow-sm rounded-lg;
 }
 
 .form-input,
@@ -88,7 +88,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .form-checkbox,
 .form-radio {
-	@apply text-primary-500 checked:bg-primary-500 dark:checked:border-transparent border border-gray-300 focus:border-primary-300 dark:border-gray-700/60 dark:focus:border-primary-500/50;
+	@apply text-violet-500 checked:bg-violet-500 dark:checked:border-transparent border border-gray-300 focus:border-violet-300 dark:border-surface-400/30 dark:focus:border-violet-500/50;
 }
 
 /* Switch element */
@@ -112,7 +112,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .form-switch input[type="checkbox"]:checked + label {
-	@apply bg-primary-500;
+	@apply bg-violet-500;
 }
 
 .form-switch input[type="checkbox"]:checked + label > span:first-child {
@@ -120,7 +120,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .form-switch input[type="checkbox"]:disabled + label {
-	@apply cursor-not-allowed bg-gray-100 dark:bg-gray-700/20 border border-gray-200 dark:border-gray-700/60;
+	@apply cursor-not-allowed bg-gray-100 dark:bg-gray-700/20 border border-gray-200 dark:border-surface-400/30;
 }
 
 .form-switch input[type="checkbox"]:disabled + label > span:first-child {
@@ -135,52 +135,4 @@ input[type="search"]::-webkit-search-results-decoration {
 .no-scrollbar {
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-track);
-  border-radius: 12px;
-}
-.scrollbar-thin::-webkit-scrollbar-track:hover {
-  background-color: var(--scrollbar-track-hover, var(--scrollbar-track));
-}
-.scrollbar-thin::-webkit-scrollbar-track:active {
-  background-color: var(--scrollbar-track-active, var(--scrollbar-track-hover, var(--scrollbar-track)));
-}
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-  border-radius: 12px;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-thumb-hover, var(--scrollbar-thumb));
-}
-.scrollbar-thin::-webkit-scrollbar-thumb:active {
-  background-color: var(--scrollbar-thumb-active, var(--scrollbar-thumb-hover, var(--scrollbar-thumb)));
-}
-.scrollbar-thin::-webkit-scrollbar-corner {
-  background-color: var(--scrollbar-corner);
-  border-radius: 12px;
-}
-.scrollbar-thin::-webkit-scrollbar-corner:hover {
-  background-color: var(--scrollbar-corner-hover, var(--scrollbar-corner));
-}
-.scrollbar-thin::-webkit-scrollbar-corner:active {
-  background-color: var(--scrollbar-corner-active, var(--scrollbar-corner-hover, var(--scrollbar-corner)));
-}
-.scrollbar-thin {
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
-}
-.scrollbar-thin::-webkit-scrollbar {
-  display: block;
-  width: 8px;
-  height: 8px;
-}
-
-.scrollbar-track-transparent {
-  --scrollbar-track: transparent !important;
-}
-
-.scrollbar-thumb-surface {
-  --scrollbar-thumb: rgb(var(--color-secondary-200)) !important;
 }

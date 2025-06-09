@@ -15,6 +15,7 @@ export interface ChipProps {
 	className?: string;
 	rounded?: Size;
 	label?: string;
+	noTranslate?: boolean;
 }
 
 /**
@@ -121,15 +122,17 @@ const Chip = ({
 	className,
 	size = "md",
 	type = "soft",
-	variant = "primary",
 	rounded = "full",
+	variant = "primary",
+	noTranslate = false,
 }: ChipProps) => {
 	const t = useTranslations();
+	const text = noTranslate ? label : t(label);
 	return (
 		<div className={generateChipClasses(variant, type, size, rounded, className)}>
 			{/* Area: Children */}
 			{children}
-			{label && t(label)}
+			{text ?? ""}
 		</div>
 	);
 };

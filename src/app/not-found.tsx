@@ -1,7 +1,7 @@
-import Link from "next/link";
-import Image from "next/image";
-import NotFoundImage from "@/public/images/404-illustration.svg";
 import NotFoundImageDark from "@/public/images/404-illustration-dark.svg";
+import NotFoundImage from "@/public/images/404-illustration.svg";
+import Image from "next/image";
+import Link from "next/link";
 
 const NotFound = () => {
 	return (
@@ -33,7 +33,7 @@ const NotFound = () => {
 										Hmm...this page doesn't exist. Try searching for something else!
 									</div>
 									<Link
-										href="/"
+										href="/sns/dashboard"
 										className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white"
 									>
 										Back To Dashboard

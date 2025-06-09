@@ -22,13 +22,6 @@ const AppLayoutTemplate = ({ children }: AppLayoutTemplateProps) => {
 					label: "sidebar.dashboard",
 					href: "/dashboard",
 				},
-				{
-					icon: "ChartNoAxesColumn",
-					id: "statistics",
-					groupId: "statistics",
-					label: "sidebar.statistics",
-					href: "/report",
-				},
 			],
 		},
 		{
@@ -39,7 +32,14 @@ const AppLayoutTemplate = ({ children }: AppLayoutTemplateProps) => {
 					id: "customers",
 					groupId: "customers",
 					label: "sidebar.customers",
-					href: "/lead",
+					href: "/brands",
+				},
+				{
+					icon: "Rocket",
+					id: "campaign",
+					groupId: "campaign",
+					label: "sidebar.campaigns",
+					href: "/templates",
 				},
 				{
 					icon: "SendHorizontal",
@@ -47,68 +47,6 @@ const AppLayoutTemplate = ({ children }: AppLayoutTemplateProps) => {
 					groupId: "send_manual",
 					label: "sidebar.send_manual",
 					href: "/manual",
-				},
-				{
-					icon: "Rocket",
-					id: "campaign",
-					groupId: "campaign",
-					label: "sidebar.campaigns",
-					href: "/campaign",
-				},
-			],
-		},
-		{
-			groupName: "sidebar.history",
-			groups: [
-				{
-					icon: "ChartNoAxesColumnIncreasing",
-					id: "sending_history",
-					groupId: "sending_history",
-					label: "sidebar.sending_history",
-					href: "/sending-history",
-				},
-				{
-					icon: "FileDown",
-					id: "export_management",
-					groupId: "export_management",
-					label: "sidebar.export_management",
-					href: "/export-management",
-				},
-				{
-					icon: "SquareUserRound",
-					id: "user_history",
-					groupId: "user_history",
-					label: "sidebar.user_history",
-				},
-			],
-		},
-		{
-			groupName: "sidebar.more",
-			groups: [
-				{
-					icon: "Settings",
-					id: "setting",
-					groupId: "setting",
-					label: "sidebar.setting",
-					subGroups: [
-						{
-							id: "service-configuration",
-							groupId: "setting",
-							label: "sidebar.service_configuration",
-							href: "/setting/service-configuration",
-						},
-						{
-							id: "script",
-							groupId: "setting",
-							label: "sidebar.script",
-						},
-						{
-							id: "brand_template",
-							groupId: "setting",
-							label: "sidebar.brand_template",
-							href: "/template-brandname",
-						},
-					],
 				},
 			],
 		},

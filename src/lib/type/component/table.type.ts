@@ -8,6 +8,7 @@ export interface TableColumn<T> {
 	headerClass?: string;
 	placement?: "center" | "left" | "right" | "justify" | "char" | null;
 	isHidden?: boolean;
+	textEllipsis?: boolean;
 	class?: string;
 	cellClass?: string;
 	component?: TableColumnAction<T>[];

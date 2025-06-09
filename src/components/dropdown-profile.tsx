@@ -30,7 +30,7 @@ export default function DropdownProfile({ align }: { align?: "left" | "right" })
 			</MenuButton>
 			<Transition
 				as="div"
-				className={`origin-top-right z-10 absolute top-full min-w-[11rem] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 py-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${
+				className={`origin-top-right z-10 absolute top-full min-w-[11rem] bg-white dark:bg-gray-800 border border-gray-200 dark:border-surface-400/30 py-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${
 					align === "right" ? "right-0" : "left-0"
 				}`}
 				enter="transition ease-out duration-200 transform"
@@ -40,7 +40,7 @@ export default function DropdownProfile({ align }: { align?: "left" | "right" })
 				leaveFrom="opacity-100"
 				leaveTo="opacity-0"
 			>
-				<div className="pt-0.5 pb-2 px-3 mb-1 border-b border-gray-200 dark:border-gray-700/60">
+				<div className="pt-0.5 pb-2 px-3 mb-1 border-b border-gray-200 dark:border-surface-400/30">
 					<div className="font-medium text-gray-800 dark:text-gray-100">Acme Inc.</div>
 					<div className="text-xs text-gray-500 dark:text-gray-400 italic">Administrator</div>
 				</div>

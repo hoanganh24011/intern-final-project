@@ -11,6 +11,7 @@ import Chip from "./Chip";
 import CircleProgress from "./CircleProgress";
 import DateTimePicker from "./DateTimePicker";
 import DonutChart from "./DonutChart";
+import FilterSelect from "./FilterSelect";
 import HeaderTitle from "./HeaderTitle";
 import Icon from "./Icon";
 import InputSearch from "./InputSearch";
@@ -53,6 +54,7 @@ export {
 	CircleProgress,
 	DateTimePicker,
 	DonutChart,
+	FilterSelect,
 	HeaderTitle,
 	Icon,
 	InputSearch,

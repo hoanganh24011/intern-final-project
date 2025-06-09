@@ -3,7 +3,7 @@
 import { TableColumn } from "@type/component/table.type";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { TableBody } from "../atoms";
 import { ActionColumnOption } from "../atoms/TableBody";
 import TableHeader from "../atoms/TableHeader";
@@ -31,7 +31,7 @@ export interface TableProps<T extends TableRow> {
 	showActionColumn?: boolean;
 	actionColumnOptions?: ActionColumnOption<T>[];
 	isLoading?: boolean;
-	onSelectAllChange?: () => void;
+	onSelectAll?: (value: boolean) => void;
 	onSelectRow?: (data: TableRow[]) => void;
 	onDeselectRow?: (data: TableRow[]) => void;
 	onSort?: (columnKey: string, direction: "asc" | "desc") => void;
@@ -61,7 +61,7 @@ const DataTable = <T extends TableRow>({
 	isLoading = false,
 	onSelectRow,
 	onDeselectRow,
-	onSelectAllChange,
+	onSelectAll,
 	onSort,
 	onPinColumn,
 	onHideColumn,
@@ -77,11 +77,16 @@ const DataTable = <T extends TableRow>({
 	/**
 	 * Handle row selected all
 	 */
-	const handleSelectedAllChange = useCallback(() => {
-		onSelectAllChange && onSelectAllChange();
-		setIsSelectedAll(!isSelectedAll);
-		onDeselectRow && onDeselectRow([]);
-	}, [onSelectAllChange, onDeselectRow, isSelectedAll]);
+	const handleSelectedAll = useCallback(
+		(event: ChangeEvent<HTMLInputElement>) => {
+			const target = event.target;
+			if (!target) return;
+			onSelectAll && onSelectAll(target.checked);
+			setIsSelectedAll(target.checked);
+			onDeselectRow && onDeselectRow([]);
+		},
+		[onSelectAll, onDeselectRow]
+	);
 
 	/**
 	 * Handle selected row
@@ -134,7 +139,7 @@ const DataTable = <T extends TableRow>({
 	useEffect(() => {
 		const checkbox = document?.getElementById(`table-${id}-header-checkbox`) as HTMLInputElement;
 		if (!checkbox) return;
-		if (isSelectedAll && notSelectedList.length) {
+		if ((isSelectedAll && notSelectedList.length) || (!selectedAll && selectedList.length)) {
 			checkbox.checked = false;
 			checkbox.indeterminate = true;
 		} else if (!isSelectedAll && totalItem && selectedList.length === totalItem) {
@@ -175,16 +180,16 @@ const DataTable = <T extends TableRow>({
 					columns={columns}
 					showIndex={showIndex}
 					showAction={showAction}
+					selectedAll={selectedAll}
 					dragDropAble={dragDropAble}
 					showCheckbox={showCheckbox}
-					selectedAll={isSelectedAll}
 					showActionColumn={showActionColumn}
-					onSelectAllClick={handleSelectedAllChange}
+					onLineBreak={onLineBreak}
 					handleSortColumn={onSort}
 					handlePinColumn={onPinColumn}
 					handleHideColumn={onHideColumn}
 					onSetSizeColumn={onSetSizeColumn}
-					onLineBreak={onLineBreak}
+					onSelectAll={handleSelectedAll}
 				/>
 
 				{/* Table body */}

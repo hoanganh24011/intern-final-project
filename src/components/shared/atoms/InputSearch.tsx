@@ -154,7 +154,9 @@ const InputSearch = ({
 				{...props}
 				value={value}
 				type="text"
-				placeholder={t(props.placeholder ?? "input.placeholder", { data: t("keyword") })}
+				placeholder={t(props.placeholder ?? "input.placeholder", {
+					data: t("keyword").toLowerCase(),
+				})}
 				className={getInputClassNames(size, value)}
 				onKeyDown={handleSearch}
 				onChange={handleInputSearchChange}

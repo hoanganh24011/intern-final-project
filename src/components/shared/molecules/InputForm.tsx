@@ -79,7 +79,7 @@ const InputForm = ({
 					{/* Area: Label */}
 					{label && (
 						<div className="flex justify-between gap-2">
-							<label className="flex whitespace-nowrap text-base font-semibold">
+							<label className="flex whitespace-nowrap text-base font-semibold" htmlFor={props.id}>
 								{noTranslateLabel ? label : t(label)}{" "}
 								{required && <Asterisk size={12} className="text-danger-500" />}
 							</label>
@@ -104,6 +104,7 @@ const InputForm = ({
 						{/* Area: Input  */}
 						<input
 							{...props}
+							id={props.id}
 							type={type}
 							value={value}
 							autoComplete="off"

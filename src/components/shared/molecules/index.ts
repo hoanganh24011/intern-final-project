@@ -2,6 +2,7 @@ import Button from "./Button";
 import ConfirmModal from "./ConfirmModal";
 import Filter from "./Filter";
 import FilterDrawer from "./FilterDrawer";
+import FilterItem from "./FilterItem";
 import GroupAvatar from "./GroupAvatar";
 import IconButton from "./IconButton";
 import InputForm from "./InputForm";
@@ -18,6 +19,7 @@ export {
 	ConfirmModal,
 	Filter,
 	FilterDrawer,
+	FilterItem,
 	GroupAvatar,
 	IconButton,
 	InputForm,

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
 
 interface ContextProps {
 	sidebarOpen: boolean;
@@ -13,10 +13,9 @@ const AppContext = createContext<ContextProps>({
 });
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
-	const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
-	return (
-		<AppContext.Provider value={{ sidebarOpen, setSidebarOpen }}>{children}</AppContext.Provider>
-	);
+	const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+	const value = useMemo(() => ({ sidebarOpen, setSidebarOpen }), [sidebarOpen, setSidebarOpen]);
+	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 export const useAppProvider = () => useContext(AppContext);

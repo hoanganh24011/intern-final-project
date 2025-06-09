@@ -21,8 +21,10 @@ const getAuthHeaders = (token: string) => {
  * @param request Request
  */
 const apiRequest = async <T>(method: ApiMethod, request: Request) => {
-	const { url, body, params, token } = request;
-	const headers = getAuthHeaders(token);
+	const { url, body, params } = request;
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+	};
 
 	const queryParam =
 		params && JSON.stringify(params) !== "{}" ? "?" + queryString.stringify(params ?? {}) : "";
@@ -46,7 +48,7 @@ const apiRequest = async <T>(method: ApiMethod, request: Request) => {
  * @returns Generic Type <T>
  */
 export const apiGet = <T>(request: Request) => {
-	return apiRequest<T>("GET", { ...request });
+	return apiRequest<T>("GET", request);
 };
 
 /**

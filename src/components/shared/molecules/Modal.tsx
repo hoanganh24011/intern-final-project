@@ -3,7 +3,7 @@
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react";
 import { Size } from "@type/common.type";
 import clsx from "clsx";
-import { MouseEvent, ReactNode, useCallback } from "react";
+import { ChangeEventHandler, MouseEvent, ReactNode, useCallback } from "react";
 import { ModalAction } from "../atoms";
 import { ActionButton } from "../atoms/ModalAction";
 
@@ -18,7 +18,7 @@ export interface ModalProps {
 	size?: Omit<Size, "2xs" | "xs">;
 	confirmClassName?: string;
 	cancelClassName?: string;
-	onCancel?: () => void;
+	onCancel?: (event?: ChangeEventHandler<HTMLButtonElement>) => void;
 	onConfirm?: () => void;
 	setIsOpen: (value: boolean) => void;
 }
@@ -83,17 +83,17 @@ const Modal = ({
 				>
 					<DialogPanel
 						className={clsx(
-							"flex h-full w-full flex-col rounded-lg bg-white shadow-lg dark:bg-gray-800",
+							"flex h-fit w-full flex-col rounded-lg bg-white shadow-lg dark:bg-gray-800",
 							{
-								"max-h-96 max-w-screen-md": size === "md",
-								"max-h-[640px] max-w-screen-lg": size === "lg",
-								"max-h-[800px] max-w-screen-xl": size === "xl",
-								"max-h-[1024px] max-w-screen-2xl": size === "2xl",
+								"max-w-screen-md": size === "md",
+								"max-w-screen-lg": size === "lg",
+								"max-w-screen-xl": size === "xl",
+								"max-w-screen-2xl": size === "2xl",
 							}
 						)}
 					>
 						{/* Area: Header Modal */}
-						<div className="flex-none border-b border-gray-200 px-5 py-3 dark:border-surface-400/30">
+						<div className="h-12 flex-none border-b border-gray-200 px-5 py-3 dark:border-surface-400/30">
 							<div className="flex items-center justify-between">
 								<DialogTitle className="font-semibold text-gray-800 dark:text-gray-100">
 									{title}
@@ -111,11 +111,12 @@ const Modal = ({
 						</div>
 
 						{/* Area: Modal body */}
-						<div className="scrollbar-thin mx-1 my-3 flex flex-1 overflow-y-auto">
-							<div className="mx-4 flex-1">{children}</div>
+						<div className="scrollbar-thin mx-1 my-3 flex max-h-[calc(100vh-177px)] overflow-y-auto overflow-x-hidden">
+							<div className="w-full px-4">{children}</div>
 						</div>
+
 						{/* Area: Modal Action */}
-						<div className="flex-none">
+						<div className="h-[65px] flex-none">
 							<ModalAction
 								cancelLabel={cancelLabel}
 								confirmLabel={confirmLabel}

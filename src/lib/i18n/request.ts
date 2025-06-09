@@ -5,11 +5,15 @@ export default getRequestConfig(async () => {
 	const locale = await getUserLocale();
 
 	const common = await import(`./locales/${locale}/common.json`);
+	const brands = await import(`./locales/${locale}/brands.json`);
+	const components = await import(`./locales/${locale}/components.json`);
 
 	return {
 		locale,
 		messages: {
 			...common,
+			...brands,
+			...components,
 		},
 	};
 });

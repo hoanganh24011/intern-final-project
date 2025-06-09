@@ -1,4 +1,6 @@
 {
+	"keyword": "Keyword",
+	"sync_data": "Sync data",
 	"title": {
 		"dashboard": "Dashboard",
 		"unit_user": "Unit & User",
@@ -106,7 +108,6 @@
 	"input": {
 		"placeholder": "Enter {data}..."
 	},
-	"keyword": "Keyword",
 	"common_data": {
 		"lead": "Lead",
 		"list": "Customer List",
@@ -127,7 +128,9 @@
 		"export_excel_csv": "Export Excel/CSV file"
 	},
 	"error_message": {
-		"selected_at_least": "Please select at least one {data}",
-		"required": "This {data} field is required"
+		"required": "This field is required",
+		"min_length": "This field must be at least {data} characters",
+		"max_length": "This field must be at most {data} characters",
+		"invalid_value": "This field is invalid"
 	}
 }

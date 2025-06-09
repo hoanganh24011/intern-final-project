@@ -17,6 +17,7 @@ import {
 	WrapText,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { ChangeEventHandler } from "react";
 
 export interface TableHeaderProps<T> {
 	id: string;
@@ -27,7 +28,7 @@ export interface TableHeaderProps<T> {
 	dragDropAble?: boolean;
 	columns: TableColumn<T>[];
 	showActionColumn?: boolean;
-	onSelectAllClick: () => void;
+	onSelectAll: ChangeEventHandler<HTMLInputElement>;
 	handleSortColumn?: (columnKey: string, direction: "asc" | "desc") => any;
 	handlePinColumn?: (columnKey: string) => any;
 	handleHideColumn?: (columnKey: string) => any;
@@ -47,12 +48,12 @@ const TableHeader = <T,>({
 	showCheckbox = true,
 	dragDropAble = false,
 	showActionColumn = false,
-	onSelectAllClick,
-	handleSortColumn,
-	handlePinColumn,
-	handleHideColumn,
-	onSetSizeColumn,
+	onSelectAll,
 	onLineBreak,
+	handlePinColumn,
+	onSetSizeColumn,
+	handleSortColumn,
+	handleHideColumn,
 }: TableHeaderProps<T>) => {
 	const t = useTranslations();
 
@@ -77,7 +78,7 @@ const TableHeader = <T,>({
 									className="form-checkbox checked:!bg-primary-500"
 									type="checkbox"
 									checked={selectedAll}
-									onChange={onSelectAllClick} // Correct format
+									onChange={onSelectAll}
 								/>
 							</label>
 						</div>

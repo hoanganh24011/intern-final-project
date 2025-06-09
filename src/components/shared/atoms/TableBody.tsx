@@ -6,16 +6,18 @@ import { parseToFormat } from "@utils/date-time";
 import clsx from "clsx";
 import { Menu as MenuLu } from "lucide-react";
 import { useTranslations } from "next-intl";
-import React, { Fragment, useCallback, useMemo, useState } from "react";
+import React, { Fragment, MouseEvent, useCallback, useMemo, useState } from "react";
 import { TableRow } from "../organisms/DataTable";
+import Icon from "./Icon";
 import Skeleton from "./Skeleton";
+import Tooltip from "./Tooltip";
 
 export interface ActionColumnOption<T> {
 	label: string;
 	noTranslate?: boolean;
 	className?: string;
 	icon?: React.ReactNode;
-	onClick?: (row: T) => any;
+	onClick?: (row: T) => void | Promise<void>;
 }
 
 export interface TableBodyProps<T> {
@@ -36,6 +38,58 @@ export interface TableBodyProps<T> {
 	actionColumnOptions?: ActionColumnOption<T>[];
 	onSelectRow: (row: T) => void;
 }
+
+/**
+ * Data Cel Component
+ */
+const DataCell = ({
+	keyCell,
+	value,
+	isLoading,
+	textEllipsis,
+}: {
+	value: any;
+	keyCell: string;
+	isLoading: boolean;
+	textEllipsis?: boolean;
+}) => {
+	const [isEllipsis, setIsEllipsis] = useState<boolean | undefined>(textEllipsis);
+
+	/**
+	 * Handle Display Text
+	 */
+	const handleDisplayText = useCallback((event: MouseEvent<SVGSVGElement>) => {
+		event.stopPropagation();
+		setIsEllipsis((prev) => !prev);
+	}, []);
+
+	return (
+		<>
+			<div className="flex items-center">
+				{isLoading ? (
+					<Skeleton className="!h-[18px]" />
+				) : (
+					<div
+						id={keyCell}
+						className={clsx("font-medium text-gray-800 dark:text-gray-100", {
+							"max-w-80 overflow-hidden text-ellipsis text-nowrap": isEllipsis,
+						})}
+					>
+						{value}
+					</div>
+				)}
+			</div>
+			{textEllipsis && (
+				<Icon
+					name={isEllipsis ? "Eye" : "EyeOff"}
+					size={16}
+					className="ml-2 cursor-pointer hover:stroke-primary-500"
+					onClick={handleDisplayText}
+				/>
+			)}
+		</>
+	);
+};
 
 /**
  * Table Body Component
@@ -75,9 +129,9 @@ const TableBody = <T extends TableRow>({
 
 			switch (col.dataType) {
 				case ColumnType.TEXT:
-					return value || "-";
+					return value ?? "-";
 				case ColumnType.NUMBER:
-					return value || 0;
+					return value ?? 0;
 				case ColumnType.DATE:
 					return parseToFormat(value, "dd/MM/yyyy");
 				case ColumnType.DATETIME:
@@ -201,15 +255,24 @@ const TableBody = <T extends TableRow>({
 							<td
 								className={clsx("whitespace-nowrap px-2 py-2 first:pl-5 last:pr-5", col.cellClass)}
 							>
-								<div className="flex items-center">
-									{isLoading ? (
-										<Skeleton className="!h-[18px]" />
-									) : (
-										<div id={col.key} className="font-medium text-gray-800 dark:text-gray-100">
-											{col.dataFormat ? col.dataFormat(row) : renderCellValue(col, row)}
-										</div>
-									)}
-								</div>
+								{col.textEllipsis ? (
+									<Tooltip
+										content={col.dataFormat ? col.dataFormat(row) : renderCellValue(col, row)}
+									>
+										<DataCell
+											textEllipsis
+											keyCell={col.key}
+											isLoading={isLoading}
+											value={col.dataFormat ? col.dataFormat(row) : renderCellValue(col, row)}
+										/>
+									</Tooltip>
+								) : (
+									<DataCell
+										keyCell={col.key}
+										isLoading={isLoading}
+										value={col.dataFormat ? col.dataFormat(row) : renderCellValue(col, row)}
+									/>
+								)}
 							</td>
 						</Fragment>
 					))}
