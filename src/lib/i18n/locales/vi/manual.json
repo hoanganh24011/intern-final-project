@@ -1,0 +1,20 @@
+{
+  "manuals_page": {
+    "title": "Gửi tin thủ công",
+    "channel": "Kênh gửi",
+    "brand": "Thương hiệu",
+    "template": "Mẫu tin nhắn",
+    "receiver_info": "Thông tin người nhận *",
+    "phone": "Số điện thoại",
+    "otp": "OTP",
+    "number": "number",
+    "add_receiver": "➕ Thêm người nhận",
+    "reset": "Đặt lại",
+    "send": "Gửi",
+    "success": "Gửi tin thành công!",
+    "error": "Có lỗi xảy ra khi gửi tin.",
+    "error_send": "Không gửi được.",
+    "brand_error": "Lỗi khi tải thương hiệu:",
+    "template_error": "Lỗi khi tải mẫu tin nhắn:"
+  }
+}
