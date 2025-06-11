@@ -1,0 +1,13 @@
+{
+	"template_page": {
+		"title": "Brands",
+		"name": "Brand name",
+		"search_placeholder": "Search for brands...",
+		"selected_brand": "{number} brands selected",
+		"no_results": "No brands found matching your search criteria.",
+		"description": "Brand description",
+		"add_new_brand": "Add new brand",
+		"search_brand": "Search for brands",
+		"channel": "Sending channel"
+	}
+}
