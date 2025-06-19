@@ -1,239 +1,276 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
 import SelectForm from "@/src/components/shared/molecules/SelectForm";
-import InputForm from "@/src/components/shared/molecules/InputForm";
-import { DefaultPageLayout } from "@components/shared/templates";
-import { useTranslations } from "next-intl";
 
-interface ReceiverData {
-	phone: string;
-	otp: string;
-	number: string;
-}
+import { apiGetBrands } from "@api/brand";
+import { apiCreateMessage } from "@api/message";
+
+import {  apiGetTemplateById, apiGetTemplates } from "@api/template";
+import { SMSReview } from "@components/shared/atoms";
+import { Button } from "@components/shared/molecules";
+import ReceiverTable, { RowData } from "@components/shared/molecules/ReceiverTable";
+import { DefaultPageLayout } from "@components/shared/templates";
+import { BrandQueryParams } from "@type/api/brand.type";
+import { MessageBody } from "@type/api/message.type";
+import { Templates, TemplatesQueryParams } from "@type/api/template.type";
+import { SelectOption } from "@type/common.type";
+import { useFormik } from "formik";
+import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import { object, string } from "yup";
 
 const ManualPage = () => {
-	// Hooks
+
+	//Hooks
 	const t = useTranslations();
 
-	const [formData, setFormData] = useState<ReceiverData[]>([{ phone: "", otp: "", number: "" }]);
-	const [brands, setBrands] = useState([]);
-	const [templates, setTemplates] = useState([]);
-	const [selectedBrand, setSelectedBrand] = useState("");
-	const [selectedTemplate, setSelectedTemplate] = useState("");
+	//States
+	const [rows, setRows] = useState<RowData[]>([]);
+	const [sampleContent, setSampleContent] = useState<string>("");
+	const [template, setTemplate] = useState<Templates | null>(null);
+	const [brandOptions, setBrandOptions] = useState<SelectOption[]>([]);
+	const [templatesOptions, setTemplatesOptions] = useState<SelectOption[]>([]);
+
+
+	//Memoized
+	const initialValues = useMemo(
+		() => ({
+			channel: "sms",
+			brand: "",
+			template_id: "",
+		}),
+		[]
+	);
+
+	const validationSchema = useMemo(
+		() =>
+			object().shape({
+				channel: string().oneOf(["sms", "zns", "email"], t("error_message.invalid_value")),
+				brand: string().required(t("error_message.required")),
+				template_id: string().required(t("error_message.required")),
+			}),
+		[]
+	);
+
+	//Formik
+	const formik = useFormik({
+		initialValues,
+		validationSchema,
+		enableReinitialize: true,
+		onSubmit: async (values) => {
+			const body: MessageBody = {
+				template_id: values.template_id,
+				destinations: rows.map((row) => ({
+					phone_number: row.phone_number,
+					list_param: row.list_param,
+				})),
+			};
+
+			try {
+				const response = await apiCreateMessage(body);
+				if (response.code !== "OK") {
+					return toast.error(t("sending_manuals_page.create_message_failed"));
+				}
+				toast.success(t("sending_manuals_page.create_message_success"));
+				resetForm();
+			} catch {
+				toast.error(t("sending_manuals_page.create_message_failed"));
+			}
+		},
+	});
+
+	const isDisabled = useMemo(() => {
+		const missingParams = rows.some(
+			(row) => !row.phone_number || Object.values(row.list_param).some((val) => !val)
+		);
+		return (
+			!formik.values.brand ||
+			!formik.values.channel ||
+			!formik.values.template_id ||
+			missingParams ||
+			formik.isSubmitting
+		);
+	}, [formik.values, rows, formik.isSubmitting]);
+
+
+	/**
+	 * HandleGetBrands
+	 */
+	const handleGetBrands = useCallback(async () => {
+		try {
+			const params: BrandQueryParams = { channel: formik.values.channel };
+			const response = await apiGetBrands(params);
+			if (response.code !== "OK") {
+				console.log("enter day")
+				return toast.error(
+					t("api.get.failed", { data: t("sending_manuals_page.brand_list").toLowerCase() })
+				);
+			}
+
+			const {data} = response;
+
+			const options = data.map((item) => ({
+				label: item.name!,
+				value: item.id!,
+				noTranslate: true,
+			}));
+			setBrandOptions(options);
+		} catch {
+			toast.error(
+				t("api.get.failed", { data: t("sending_manuals_page.brand_list").toLowerCase() })
+			);
+		}
+	}, [formik.values.channel]);
+
+
+	/**
+	 * Handle Get Templates
+	 */
+	const handleGetTemplates = useCallback(async () => {
+		try {
+			const params: TemplatesQueryParams = {
+				brand_id: formik.values.brand,
+			};
+			const response = await apiGetTemplates(params);
+			if (response.code !== "OK") {
+				return toast.error(
+					t("api.get.failed", { data: t("sending_manuals_page.template_list").toLowerCase() })
+				);
+			}
+			const options = response.data.map((item) => ({
+				label: item.name!,
+				value: item.id!,
+				noTranslate: true,
+			}));
+			setTemplatesOptions(options);
+		} catch {
+			toast.error(
+				t("api.get.failed", { data: t("sending_manuals_page.template_list").toLowerCase() })
+			);
+		}
+	}, [formik.values.brand]);
+
+
+	/**
+	 * Handle Get TemplateById
+	 */
+	const handleGetTemplateById = useCallback(async () => {
+		try {
+			const response = await apiGetTemplateById(formik.values.template_id);
+			if (response.code !== "OK") {
+				return toast.error(
+					t("api.get.failed", { data: t("sending_manuals_page.template").toLowerCase() })
+				);
+			}
+			setTemplate(response.data);
+		} catch {
+			toast.error(t("api.get.failed", { data: t("sending_manuals_page.template").toLowerCase() }));
+		}
+	}, [formik.values.template_id]);
+
+
+	/**
+	 * Reset Form
+	 */
+	const resetForm = useCallback(() => {
+		formik.resetForm();
+		setTemplate(null);
+		setRows([{ id: crypto.randomUUID(), phone_number: "", list_param: {} }]);
+	}, []);
+
 
 	
-	const handleChange = useCallback((index: number, field: keyof ReceiverData, value: string) => {
-		setFormData((prev) => {
-			const updated = [...prev];
-			updated[index] = { ...updated[index], [field]: value };
-			return updated;
-		});
+	useEffect(() => {
+		handleGetBrands();
 	}, []);
-
-	const addReceiver = useCallback(() => {
-		setFormData((prev) => [...prev, { phone: "", otp: "", number: "" }]);
-	}, []);
-
-	const removeReceiver = useCallback((index: number) => {
-		setFormData((prev) => prev.filter((_, i) => i !== index));
-	}, []);
-
-	const handleReset = () => {
-		setSelectedBrand("");
-		setSelectedTemplate("");
-		setFormData([{ phone: "", otp: "", number: "" }]);
-	};
-
-	const handleSend = async () => {
-		try {
-			const res = await fetch("https://demo-sms.vercel.app/api/sns/messages", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					template_id: selectedTemplate,
-					destinations: formData.map((item) => ({
-						phone_number: item.phone,
-						list_param: {
-							OTP: item.otp,
-							number: item.number,
-						},
-					})),
-				}),
-			});
-
-			const result = await res.json();
-			if (res.ok) {
-				alert(" Gửi tin thành công!");
-				handleReset();
-			} else {
-				alert(` Lỗi: ${result.message || "Không gửi được."}`);
-			}
-		} catch (error) {
-			alert(" Có lỗi xảy ra khi gửi tin.");
-			console.error(error);
-		}
-	};
 
 	useEffect(() => {
-		const fetchBrands = async () => {
-			try {
-				const res = await fetch("https://demo-sms.vercel.app/api/sns/brands");
-				const data = await res.json();
-				const formatted = data.map((item: any) => ({
-					label: item.name,
-					value: item.id,
-					noTranslate: true,
-				}));
-				setBrands(formatted);
-			} catch (error) {
-				console.error("Lỗi khi tải thương hiệu:", error);
-			}
-		};
-		fetchBrands();
-	}, []);
-
+		handleGetTemplates();
+	}, [formik.values.brand]);
 
 	useEffect(() => {
-		if (!selectedBrand) return;
-		const fetchTemplates = async () => {
-			try {
-				const res = await fetch(
-					`https://demo-sms.vercel.app/api/sns/templates?brand_id=${selectedBrand}`
-				);
-				const data = await res.json();
-				const formatted = data.map((item: any) => ({
-					label: item.name,
-					value: item.id,
-					noTranslate: true,
-				}));
-				setTemplates(formatted);
-			} catch (error) {
-				console.error("Lỗi khi tải mẫu tin nhắn:", error);
-			}
-		};
-		fetchTemplates();
-	}, [selectedBrand]);
+		if (!formik.values.template_id) return setTemplate(null);
+		handleGetTemplateById();
+		setRows([{ id: crypto.randomUUID(), phone_number: "", list_param: {} }]);
+	}, [formik.values.template_id]);
+
+	useEffect(() => {
+		const params = rows[0]?.list_param || {};
+		const content = template?.content.replace(/{{(.*?)}}/g, (_, key) => params[key] || "") ?? "";
+		setSampleContent(content);
+	}, [rows, template]);
 
 	return (
 		<DefaultPageLayout breadcrumbs={[{ label: "manuals_page.title", key: "manual" }]}>
-			<div className="rounded bg-white px-6 py-8 shadow-sm dark:bg-gray-800">
-				<h1 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white">
-					{t("manuals_page.title")}
-				</h1>
-
-				{/* Form lựa chọn */}
-				<div className="max-w-4xl space-y-4">
+			<form onSubmit={formik.handleSubmit} className="flex items-start gap-6">
+				<div className="flex flex-[2] flex-col gap-6">
 					<SelectForm
+						id="channel"
+						name="channel"
 						label="manuals_page.channel"
-						required
-						options={[{ label: "SMS Brandname", value: "sms", noTranslate: true }]}
-						placeholder="Chọn kênh"
-						value="sms"
-						onChange={() => {}}
-						disabled
+						placeholder={t("select.placeholder", {
+							data: t("sending_manuals_page.channel").toLowerCase(),
+						})}
+						options={[
+							{ value: "sms", label: t("sending_manuals_page.channel_sms"), noTranslate: true },
+							{ value: "zns", label: t("sending_manuals_page.channel_zns"), noTranslate: true },
+							{ value: "email", label: t("sending_manuals_page.channel_email"), noTranslate: true },
+						]}
+						errorMessage={formik.errors.channel}
+						value={formik.values.channel}
+						onChange={formik.handleChange}
 					/>
+
 					<SelectForm
+						id="brand"
+						name="brand"
 						label="manuals_page.brand"
-						required
-						options={brands}
-						placeholder="Chọn thương hiệu"
-						value={selectedBrand}
-						onChange={(e) => setSelectedBrand(e.target.value)}
+						placeholder={t("select.placeholder", {
+							data: t("sending_manuals_page.brand").toLowerCase(),
+						})}
+						options={brandOptions}
+						errorMessage={formik.errors.brand}
+						value={formik.values.brand}
+						onChange={formik.handleChange}
 					/>
+
 					<SelectForm
+						id="template_id"
+						name="template_id"
 						label="manuals_page.template"
-						required
-						options={templates}
-						placeholder="Chọn mẫu"
-						value={selectedTemplate}
-						onChange={(e) => setSelectedTemplate(e.target.value)}
+						placeholder={t("select.placeholder", {
+							data: t("sending_manuals_page.template").toLowerCase(),
+						})}
+						options={templatesOptions}
+						errorMessage={formik.errors.template_id}
+						value={formik.values.template_id}
+						onChange={formik.handleChange}
 					/>
-				</div>
 
-				{/* Bảng người nhận */}
-				<div className="mt-8">
-					<h3 className="mb-2 text-base font-semibold">Thông tin người nhận *</h3>
+					{template && <ReceiverTable params={template.params} rows={rows} setRows={setRows} />}
 
-					{/* Header bảng */}
-					<div className="mb-3 grid grid-cols-12 gap-4 border-b pb-2 text-sm font-semibold">
-						<div className="col-span-4">Số điện thoại</div>
-						<div className="col-span-4">OTP</div>
-						<div className="col-span-3">number</div>
-						<div className="col-span-1 text-center"></div>
-					</div>
-
-					{/* Dòng dữ liệu */}
-					<div className="space-y-3">
-						{formData.map((data, index) => (
-							<div key={index} className="grid grid-cols-12 items-center gap-4 border-b pb-2">
-								<div className="col-span-4">
-									<InputForm
-										label=""
-										type="tel"
-										required
-										value={data.phone}
-										onChange={(e) => handleChange(index, "phone", e.target.value)}
-									/>
-								</div>
-								<div className="col-span-4">
-									<InputForm
-										label=""
-										type="text"
-										required
-										value={data.otp}
-										onChange={(e) => handleChange(index, "otp", e.target.value)}
-									/>
-								</div>
-								<div className="col-span-3">
-									<InputForm
-										label=""
-										type="number"
-										required
-										value={data.number}
-										onChange={(e) => handleChange(index, "number", e.target.value)}
-									/>
-								</div>
-								<div className="col-span-1 flex justify-center">
-									<button
-										className="text-red-600 hover:text-red-800"
-										onClick={() => removeReceiver(index)}
-										disabled={formData.length === 1}
-									>
-										🗑️
-									</button>
-								</div>
-							</div>
-						))}
-					</div>
-
-					{/* Nút thêm người nhận */}
-					<div className="mt-4">
-						<button
-							className="flex items-center gap-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-							onClick={addReceiver}
-						>
-							➕ Thêm người nhận
-						</button>
+					<div className="mt-6 flex justify-end gap-3">
+						<Button outline type="button" onClick={resetForm}>
+							{t("manuals_page.reset")}
+						</Button>
+						<Button type="submit" disabled={isDisabled}>
+							{t("manuals_page.send")}
+						</Button>
 					</div>
 				</div>
 
-				{/* Nút hành động */}
-				<div className="mt-10 flex justify-end gap-3">
-					<button
-						className="rounded border border-orange-500 px-6 py-2 text-orange-500 hover:bg-orange-50"
-						onClick={handleReset}
-					>
-						Đặt lại
-					</button>
-					<button
-						className="rounded bg-orange-500 px-6 py-2 text-white hover:bg-orange-600"
-						onClick={handleSend}
-					>
-						Gửi
-					</button>
+				<div className="flex flex-[1] justify-center">
+					<div className="w-[360px]">
+						<SMSReview
+							channel={formik.values.channel}
+							branchName={brandOptions.find((b) => b.value === formik.values.brand)?.label || ""}
+							messageContent={sampleContent}
+							phoneNumber={"+84123456789"}
+						/>
+					</div>
 				</div>
-			</div>
+			</form>
 		</DefaultPageLayout>
 	);
 };

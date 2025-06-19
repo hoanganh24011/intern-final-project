@@ -1,20 +1,41 @@
 {
   "manuals_page": {
-    "title": "Gửi tin thủ công",
+    "title": "Gửi thủ công",
     "channel": "Kênh gửi",
     "brand": "Thương hiệu",
     "template": "Mẫu tin nhắn",
-    "receiver_info": "Thông tin người nhận *",
-    "phone": "Số điện thoại",
-    "otp": "OTP",
-    "number": "number",
-    "add_receiver": "➕ Thêm người nhận",
     "reset": "Đặt lại",
-    "send": "Gửi",
-    "success": "Gửi tin thành công!",
-    "error": "Có lỗi xảy ra khi gửi tin.",
-    "error_send": "Không gửi được.",
-    "brand_error": "Lỗi khi tải thương hiệu:",
-    "template_error": "Lỗi khi tải mẫu tin nhắn:"
+    "send": "Gửi"
+  },
+  "sending_manuals_page": {
+    "channel": "Kênh gửi",
+    "brand": "Thương hiệu",
+    "template": "Mẫu tin nhắn",
+    "template_list": "Danh sách mẫu",
+    "brand_list": "Danh sách thương hiệu",
+    "channel_sms": "SMS",
+    "channel_zns": "Zalo ZNS",
+    "channel_email": "Email",
+    "create_message_success": "Gửi tin nhắn thành công!",
+    "create_message_failed": "Gửi tin nhắn thất bại.",
+    "receiver_information": "Thông tin người nhận",
+    "add_receiver": "Thêm người nhận"
+  },
+  "select": {
+    "placeholder": "Chọn {data}"
+  },
+  "error_message": {
+    "required": "Không được để trống",
+    "invalid_value": "Giá trị không hợp lệ"
+  },
+  "api": {
+    "get": {
+      "failed": "Không thể lấy {data}"
+    }
+  },
+  "channel": {
+    "SMS": "Tin nhắn SMS",
+    "ZNS": "Zalo ZNS",
+    "Email": "Email"
   }
 }

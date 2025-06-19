@@ -1,20 +1,42 @@
 {
   "manuals_page": {
-    "title": "Manual Message Sending",
+    "title": "Manual Sending",
     "channel": "Channel",
     "brand": "Brand",
     "template": "Template",
-    "receiver_info": "Receiver Information *",
-    "phone": "Phone Number",
-    "otp": "OTP",
-    "number": "number",
-    "add_receiver": "➕ Add Receiver",
     "reset": "Reset",
-    "send": "Send",
-    "success": "Message sent successfully!",
-    "error": "An error occurred while sending the message.",
-    "error_send": "Unable to send.",
-    "brand_error": "Error loading brands:",
-    "template_error": "Error loading templates:"
+    "send": "Send"
+  },
+  "sending_manuals_page": {
+    "channel": "Channel",
+    "brand": "Brand",
+    "template": "Template",
+    "template_list": "Template List",
+    "brand_list": "Brand List",
+    "channel_sms": "SMS Message",
+    "channel_zns": "Zalo ZNS",
+    "channel_email": "Email",
+    "create_message_success": "Message sent successfully!",
+    "create_message_failed": "Failed to send message.",
+    "receiver_information" : "Receiver Information",
+    "add_receiver": "Add receiver"
+
+  },
+  "select": {
+    "placeholder": "Select a {data}"
+  },
+  "error_message": {
+    "required": "This field is required",
+    "invalid_value": "Invalid value"
+  },
+  "api": {
+    "get": {
+      "failed": "Failed to fetch {data}"
+    }
+  },
+  "channel": {
+    "SMS": "SMS Message",
+    "ZNS": "Zalo ZNS",
+    "Email": "Email"
   }
 }
