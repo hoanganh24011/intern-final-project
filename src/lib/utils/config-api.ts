@@ -1,7 +1,7 @@
 import { ApiMethod, Request } from "@type/api.type";
 import queryString from "query-string";
 
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST ?? "";
+const API_HOST = process.env.NEXT_PUBLIC_API_DOMAIN || "https://eb4e-2405-4802-9407-89d0-9ece-9dcd-e668-f33a.ngrok-free.app/api/sns";
 
 /**
  * Handle get request's headers
@@ -24,6 +24,7 @@ const apiRequest = async <T>(method: ApiMethod, request: Request) => {
 	const { url, body, params } = request;
 	const headers: Record<string, string> = {
 		"Content-Type": "application/json",
+		"ngrok-skip-browser-warning": "true"
 	};
 
 	const queryParam =
