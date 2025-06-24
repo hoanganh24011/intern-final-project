@@ -1,8 +1,9 @@
-import { ApiResponse } from "@type/api.type";
+import { ApiResponse, Request } from "@type/api.type";
 import { Brand, BrandQueryParams } from "@type/api/brand.type";
 import { apiGet } from "@utils/config-api";
 
-const SUB_PATH = "/sns/brands";
+const DOMAIN = "https://eb4e-2405-4802-9407-89d0-9ece-9dcd-e668-f33a.ngrok-free.app/api";
+const PATH = "/sns/brands";
 
 /**
  * Api get brands
@@ -10,9 +11,11 @@ const SUB_PATH = "/sns/brands";
  * @returns ApiResponse<Brand[]>
  */
 export const apiGetBrands = async (params: BrandQueryParams) => {
-	return await apiGet<ApiResponse<Brand[]>>({
+	const request: Request = {
 		params,
 		token: "",
-		url: SUB_PATH,
-	});
+		url: `${DOMAIN}${PATH}`,
+	};
+
+	return await apiGet<ApiResponse<Brand[]>>(request);
 };
