@@ -8,7 +8,7 @@ export type Request = {
 export type ApiMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export type ApiResponse<T> = {
-	code: string;
+	code: string | number;
 	message: string;
 	total?: number;
 	data: T;

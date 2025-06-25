@@ -1,16 +1,17 @@
 import { AuditInfo, Param } from "@type/common.type";
 
-export type Template = {
-	id: string;
-	name: string;
-	content: string;
-	createdAt?: string;
-	brandId?: string;
-	brandName?: string;
-	params: string[];
-} & AuditInfo;
-
-export type TemplateQueryParams = {
+export type Templates = {
+	id?: string;
 	name?: string;
-	created_at?: string;
+	brand_id?: string;
+	content: string;
+	params: string[];
 } & Param;
+
+export type TemplatesQueryParams = {
+	name?: string;
+	content?: string;
+	params?: string[];
+	brand_id?: string;
+};
+export type Template = TemplatesQueryParams & AuditInfo;

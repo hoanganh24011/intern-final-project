@@ -1,146 +1,39 @@
 import { ApiMethod, Request } from "@type/api.type";
-import queryString from "query-string";
-
-const API_HOST = process.env.NEXT_PUBLIC_API_DOMAIN || "https://eb4e-2405-4802-9407-89d0-9ece-9dcd-e668-f33a.ngrok-free.app/api/sns";
 
 /**
- * Handle get request's headers
- * @param token string
+ * @param method
+ * @param request
+ * @returns Promise<ApiResponse<T>>
  */
-const getAuthHeaders = (token: string) => {
-	if (!token) throw new Error("No access token found");
+export async function apiRequest<T>(method: ApiMethod, request: Request): Promise<T> {
+	const { url, token, body, params } = request;
 
-	return {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${token}`,
-	};
-};
+	const query = params
+		? "?" + new URLSearchParams(params as Record<string, string>).toString()
+		: "";
 
-/**
- * Api request
- * @param request Request
- */
-const apiRequest = async <T>(method: ApiMethod, request: Request) => {
-	const { url, body, params } = request;
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
-		"ngrok-skip-browser-warning": "true"
-	};
-
-	const queryParam =
-		params && JSON.stringify(params) !== "{}" ? "?" + queryString.stringify(params ?? {}) : "";
-
-	const finalUrl = `${API_HOST}${url}${queryParam}`;
-	const options: RequestInit = {
+	const response = await fetch(`${url}${query}`, {
 		method,
-		headers,
-		body,
-	};
+		headers: {
+			"Content-Type": "application/json",
+			"ngrok-skip-browser-warning": "true",
+			Authorization: `Bearer ${token}`,
+		},
 
-	const response = await fetch(finalUrl, options);
-	return response.json() as T;
-};
+		body: ["GET", "DELETE"].includes(method) ? undefined : body,
+	});
 
-/**
- * Api get data
- * @param token string
- * @param url string
- * @param params Record<string, unknown>
- * @returns Generic Type <T>
- */
-export const apiGet = <T>(request: Request) => {
-	return apiRequest<T>("GET", request);
-};
+	const data = await response.json();
 
-/**
- * Api Get File
- * @param request Request
- * @returns Response
- */
-export const apiGetFile = async (request: Request) => {
-	const { url, body, params, token } = request;
-
-	const headers = getAuthHeaders(token);
-	const queryParam =
-		JSON.stringify(params) !== "{}" ? "?" + queryString.stringify(params ?? {}) : "";
-
-	const finalUrl = `${API_HOST}${url}${queryParam}`;
-	const options: RequestInit = {
-		method: "GET",
-		headers,
-		body,
-	};
-
-	const response = await fetch(finalUrl, options);
-	return response;
-};
-
-/**
- * Api post data
- * @param token string
- * @param url string
- * @param body Record<string, unknown>
- * @param params Record<string, unknown>
- * @returns Generic Type <T>
- */
-export async function apiPost<T>(request: Request) {
-	return apiRequest<T>("POST", request);
+	return data as T;
 }
 
-/**
- * Api post file
- * @param request Request
- * @returns Generic Type <T>
- */
-export async function apiPostFile<T>(request: Request) {
-	const { url, body, params, token } = request;
-	const headers = {
-		Authorization: `Bearer ${token}`,
-	};
-	const queryParam =
-		params && JSON.stringify(params) !== "{}" ? "?" + queryString.stringify(params ?? {}) : "";
+export const apiGet = <T>(request: Request) => apiRequest<T>("GET", request);
 
-	const finalUrl = `${API_HOST}${url}${queryParam}`;
-	const options: RequestInit = {
-		method: "POST",
-		headers,
-		body,
-	};
+export const apiPost = <T>(request: Request) => apiRequest<T>("POST", request);
 
-	const response = await fetch(finalUrl, options);
-	return response.json() as T;
-}
+export const apiPut = <T>(request: Request) => apiRequest<T>("PUT", request);
 
-/**
- * Api update data
- * @param token string
- * @param url string
- * @param body Record<string, unknown>
- * @param params Record<string, unknown>
- * @returns Generic Type <T>
- */
-export async function apiPut<T>(request: Request) {
-	return apiRequest<T>("PUT", request);
-}
+export const apiPatch = <T>(request: Request) => apiRequest<T>("PATCH", request);
 
-/**
- * Api delete data
- * @param token string
- * @param url string
- * @param params Record<string, unknown>
- * @returns Generic Type <T>
- */
-export async function apiDelete<T>(request: Request) {
-	return apiRequest<T>("DELETE", request);
-}
-
-/**
- * Api delete data
- * @param token string
- * @param url string
- * @param params Record<string, unknown>
- * @returns Generic Type <T>
- */
-export async function apiPatch<T>(request: Request) {
-	return apiRequest<T>("PATCH", request);
-}
+export const apiDelete = <T>(request: Request) => apiRequest<T>("DELETE", request);
