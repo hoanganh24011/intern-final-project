@@ -1,0 +1,42 @@
+{
+  "manuals_page": {
+    "title": "Manual Sending",
+    "channel": "Channel",
+    "brand": "Brand",
+    "template": "Template",
+    "reset": "Reset",
+    "send": "Send"
+  },
+  "sending_manuals_page": {
+    "channel": "Channel",
+    "brand": "Brand",
+    "template": "Template",
+    "template_list": "Template List",
+    "brand_list": "Brand List",
+    "channel_sms": "SMS Message",
+    "channel_zns": "Zalo ZNS",
+    "channel_email": "Email",
+    "create_message_success": "Message sent successfully!",
+    "create_message_failed": "Failed to send message.",
+    "receiver_information" : "Receiver Information",
+    "add_receiver": "Add receiver"
+
+  },
+  "select": {
+    "placeholder": "Select a {data}"
+  },
+  "error_message": {
+    "required": "This field is required",
+    "invalid_value": "Invalid value"
+  },
+  "api": {
+    "get": {
+      "failed": "Failed to fetch {data}"
+    }
+  },
+  "channel": {
+    "SMS": "SMS Message",
+    "ZNS": "Zalo ZNS",
+    "Email": "Email"
+  }
+}
