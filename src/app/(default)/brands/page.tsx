@@ -10,7 +10,8 @@ import type { Brand } from "@/src/lib/type/api/brand.type";
 import Pagination from "@components/shared/molecules/Pagination";
 import ConfirmModal from "@components/shared/molecules/ConfirmModal";
 import Modal from "@components/shared/molecules/Modal";
-import { brandApiHeaders } from "@/src/lib/api/brand";
+import { brandApiHeaders } from "@utils/config-api";
+
 const searchInputStyle: CSSProperties = {
 	width: "40px",
 	transition: "width 0.3s",
