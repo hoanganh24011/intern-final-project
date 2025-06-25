@@ -1,4 +1,9 @@
-import { ApiMethod, Request } from "@type/api.type";
+import { ApiMethod, Request } from "@/src/lib/type/api.type";
+
+export const brandApiHeaders = {
+	"Content-Type": "application/json",
+	"ngrok-skip-browser-warning": "true",
+};
 
 /**
  * @param method
