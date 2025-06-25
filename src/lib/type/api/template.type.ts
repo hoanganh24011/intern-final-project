@@ -14,4 +14,4 @@ export type TemplatesQueryParams = {
 	params?: string[];
 	brand_id?: string;
 };
- export type Template = TemplatesQueryParams & AuditInfo;
+export type Template = TemplatesQueryParams & AuditInfo;
