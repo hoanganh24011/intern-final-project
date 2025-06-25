@@ -1,39 +1,37 @@
-import { ApiMethod, Request, ApiResponse } from "@/src/lib/type/api.type";
+import { ApiMethod, Request } from "@/src/lib/type/api.type";
+
+export const brandApiHeaders = {
+	"Content-Type": "application/json",
+	"ngrok-skip-browser-warning": "true",
+};
 
 /**
- * @param method 
- * @param request 
+ * @param method
+ * @param request
  * @returns Promise<ApiResponse<T>>
  */
-export async function apiRequest<T>(
-  method: ApiMethod,
-  request: Request
-): Promise<T> {
-  const { url, token, body, params } = request;
+export async function apiRequest<T>(method: ApiMethod, request: Request): Promise<T> {
+	const { url, token, body, params } = request;
 
-  
-  const query = params
-    ? "?" + new URLSearchParams(params as Record<string, string>).toString()
-    : "";
+	const query = params
+		? "?" + new URLSearchParams(params as Record<string, string>).toString()
+		: "";
 
-  const response = await fetch(`${url}${query}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      "ngrok-skip-browser-warning": "true",
-      Authorization: `Bearer ${token}`,
-    },
-    
-    body: ["GET", "DELETE"].includes(method) ? undefined : body,
-  });
+	const response = await fetch(`${url}${query}`, {
+		method,
+		headers: {
+			"Content-Type": "application/json",
+			"ngrok-skip-browser-warning": "true",
+			Authorization: `Bearer ${token}`,
+		},
 
+		body: ["GET", "DELETE"].includes(method) ? undefined : body,
+	});
 
-  const data = await response.json();
+	const data = await response.json();
 
-  return data as T;
+	return data as T;
 }
-
-
 
 export const apiGet = <T>(request: Request) => apiRequest<T>("GET", request);
 
